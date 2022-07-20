@@ -44,7 +44,6 @@ WHERE continent IS NOT Null
 GROUP BY continent
 ORDER BY TotalDeathCount DESC
 
-
 -- Global new cases vs new deaths
 SELECT DATE , SUM(new_cases) AS TotalCases, SUM(new_deaths) AS TotalDeaths, SUM(new_deaths)/SUM(new_cases)*100 AS GlobalDeathPercentage
 FROM coviddeaths 
@@ -75,6 +74,8 @@ AND cd.date = cv.date
 WHERE cd.continent IS NOT NULL
 order BY 2,3
 
+
+
 -- With use of a CTE
 WITH PopvsVac (continent, location, DATE, population, new_vaccinations, RollingPeopleVaccinated)
 AS
@@ -90,6 +91,7 @@ WHERE cd.continent IS NOT NULL
 
 SELECT *, (RollingPeopleVaccinated/population)*100
 FROM PopvsVac
+
 
 
 -- Temp Table creation instead of CTE
@@ -119,7 +121,7 @@ FROM PercentagePopulationVaccinatedT
 
 
 
--- Creating veiw to store data for later visualisations
+-- Creating view to store data for later visualisations
 CREATE VIEW PercentagePopulationVaccinatedT AS 
 SELECT cd.continent, cd.location, cd.date, cd.population, cv.new_vaccinations, 
 SUM(cv.new_vaccinations) OVER (PARTITION BY cd.location ORDER BY cd.location, cd.date) AS RollingPeopleVaccinated
